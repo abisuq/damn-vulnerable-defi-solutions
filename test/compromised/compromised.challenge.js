@@ -65,14 +65,7 @@ describe('Compromised challenge', function () {
           ethers.provider
         )
     )
-    const postPrice = (price) =>
-      Promise.all(
-        oracleAccounts.map((account) =>
-          new ethers.Contract(this.oracle.address, ['function postPrice(string symbol, uint256 newPrice) external'], account)
-            .connect(account)
-            .postPrice('DVNFT', price)
-        )
-      )
+    const postPrice = (price) => Promise.all(oracleAccounts.map((account) => this.oracle.connect(account).postPrice('DVNFT', price)))
     const lowPrice = ethers.utils.parseEther('0.01').toString()
     await postPrice(lowPrice)
     await this.exchange.connect(attacker).buyOne({ value: lowPrice })
